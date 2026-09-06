@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zama - Mi Perfil</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-uppercase tracking-wider" href="tienda.html">Zama Shop</a>
+            <div>
+                <a href="tienda.html" class="btn btn-outline-light btn-sm rounded-0 me-2">Tienda</a>
+                <button id="btn-cerrar-sesion"
+                    class="btn btn-danger btn-sm rounded-0 text-uppercase fw-semibold">Salir</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container my-5">
+        <div class="row g-4">
+            <div class="col-12 col-md-4">
+                <div class="bg-white p-4 border shadow-sm h-100 text-center">
+                    <div class="mb-4 position-relative">
+                        <img id="avatar-img" src="" alt="Foto" class="rounded-circle shadow-sm"
+                            style="width: 120px; height: 120px; object-fit: cover; display: none;">
+                        <div id="avatar-inicial"
+                            class="bg-dark text-white rounded-circle d-inline-flex align-items-center justify-content-center fw-bold fs-2 shadow-sm"
+                            style="width: 120px; height: 120px;">U</div>
+                    </div>
+                    <h4 id="perfil-nombre" class="fw-bold text-uppercase mt-3 mb-1">Cargando...</h4>
+                    <p id="perfil-email" class="text-muted small">Cargando...</p>
+
+                    <hr>
+                    <div class="text-start mb-3">
+                        <small class="text-uppercase text-muted fw-bold d-block">Teléfono:</small>
+                        <span id="perfil-telefono" class="fw-semibold">No registrado</span>
+                    </div>
+                    <div class="text-start mb-4">
+                        <small class="text-uppercase text-muted fw-bold d-block">Dirección:</small>
+                        <span id="perfil-direccion" class="fw-semibold">No registrada</span>
+                    </div>
+
+                    <button class="btn btn-outline-dark btn-sm w-100 rounded-0 text-uppercase fw-semibold"
+                        data-bs-toggle="modal" data-bs-target="#modalEditarPerfil">
+                        ✏️ Editar Mis Datos
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-8">
+                <div class="bg-white p-4 border shadow-sm h-100">
+                    <h3 class="fs-5 fw-bold text-uppercase text-dark mb-3">Mis Pedidos</h3>
+                    <div class="table-responsive">
+                        <table class="table align-middle border table-hover">
+                            <thead class="table-light text-uppercase small">
+                                <tr>
+                                    <th>Ref.</th>
+                                    <th>Fecha</th>
+                                    <th>Total</th>
+                                    <th>Estado</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-pedidos">
+                                <tr>
+                                    <td colspan="4" class="text-center text-muted">Cargando...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal fade" id="modalEditarPerfil" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-0">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title text-uppercase fw-bold fs-6">Actualizar Información</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="form-editar-perfil" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Foto de Perfil</label>
+                            <input type="file" id="input-foto" name="fotoPerfil" class="form-control rounded-0"
+                                accept="image/*">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Nombre Completo</label>
+                            <input type="text" id="input-nombre" name="nombre" class="form-control rounded-0" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Correo Electrónico</label>
+                            <input type="email" id="input-email" name="email" class="form-control rounded-0" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Teléfono</label>
+                            <input type="text" id="input-telefono" name="telefono" class="form-control rounded-0">
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold">Dirección</label>
+                            <input type="text" id="input-direccion" name="direccion" class="form-control rounded-0">
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100 rounded-0 text-uppercase fw-bold">Guardar
+                            Cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/auth.js"></script>
+</body>
+
+</html>

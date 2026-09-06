@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HaDeZ - Panel de Administración</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* ── Tarjeta de perfil admin ── */
+        .admin-avatar-wrap {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            flex-shrink: 0;
+        }
+
+        .admin-avatar-wrap img {
+            width: 90px;
+            height: 90px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 3px solid #212529;
+        }
+
+        .admin-avatar-wrap .avatar-placeholder {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: #212529;
+            color: #fff;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid #adb5bd;
+        }
+
+        #avatar-preview-modal {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 50%;
+            border: 2px solid #dee2e6;
+        }
+
+        #avatar-preview-wrap-modal .avatar-placeholder-sm {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: #212529;
+            color: #fff;
+            font-size: 1.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-uppercase tracking-wider m-0 fs-4" href="#">HADeZ Panel Admin</a>
+            <div class="d-flex gap-2 align-items-center">
+                <!-- ── BOTÓN VER PERFIL ── -->
+                <button onclick="abrirModalPerfil()" class="btn btn-outline-light btn-sm rounded-0">
+                    👤 Mi Perfil
+                </button>
+                <a href="tienda.html" class="btn btn-outline-light btn-sm rounded-0">Ver Tienda</a>
+                <button onclick="cerrarSesionAdmin()" class="btn btn-danger btn-sm rounded-0">Salir</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ══════════════════════════════════════════
+         TARJETA PERFIL ADMIN (resumen rápido)
+    ══════════════════════════════════════════ -->
+    <div class="container mt-4">
+        <div class="bg-white border shadow-sm p-3 d-flex align-items-center gap-3" id="tarjeta-perfil-admin">
+            <div class="admin-avatar-wrap">
+                <div class="avatar-placeholder" id="perfil-avatar-nav">👤</div>
+            </div>
+            <div class="flex-grow-1">
+                <p class="mb-0 fw-bold text-uppercase small text-muted">Administrador</p>
+                <h5 class="mb-0 fw-bold" id="perfil-nombre-nav">Cargando...</h5>
+                <p class="mb-0 small text-muted" id="perfil-correo-nav">–</p>
+            </div>
+            <button onclick="abrirModalPerfil()"
+                class="btn btn-outline-dark btn-sm rounded-0 text-uppercase small fw-semibold">
+                ✏️ Editar Perfil
+            </button>
+        </div>
+    </div>
+
+    <main class="container mt-4">
+        <!-- TABLA PEDIDOS -->
+        <div class="row mb-5">
+            <div class="col-12">
+                <div class="bg-white p-4 border shadow-sm">
+                    <h3 class="fs-5 fw-bold mb-3 text-uppercase text-primary">📦 Gestión y Control de Pedidos Recientes
+                    </h3>
+                    <hr>
+                    <div class="table-responsive">
+                        <table class="table align-middle border table-hover">
+                            <thead class="table-dark text-uppercase small">
+                                <tr>
+                                    <th>Ref. Pedido</th>
+                                    <th>Cliente (ID)</th>
+                                    <th>Contacto / Dirección</th>
+                                    <th>Total COP</th>
+                                    <th>Estado Actual</th>
+                                    <th class="text-end">Acción</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-pedidos-admin">
+                                <tr>
+                                    <td colspan="6" class="text-center text-muted py-3">Cargando reportes de órdenes...
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- INVENTARIO -->
+        <div class="row g-4">
+            <div class="col-12 col-md-4">
+                <div class="bg-white p-4 border shadow-sm">
+                    <h3 class="fs-5 fw-bold mb-3 text-uppercase text-secondary">Añadir Nueva Prenda</h3>
+                    <hr>
+                    <form id="form-nuevo-producto" enctype="multipart/form-data">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-uppercase">Nombre de la Prenda</label>
+                            <input type="text" class="form-control rounded-0" id="admin-nombre"
+                                placeholder="Ej: Crop Top Negro" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-uppercase">Categoría</label>
+                            <select class="form-select rounded-0" id="admin-categoria" required>
+                                <option value="" disabled selected>Selecciona una categoría...</option>
+                                <option value="BLUSAS">Blusas</option>
+                                <option value="CAMISAS">Camisas</option>
+                                <option value="TOPS">Tops</option>
+                                <option value="PANTALONES">Pantalones</option>
+                                <option value="VESTIDOS">Vestidos</option>
+                                <option value="CONJUNTOS">Conjuntos</option>
+                                <option value="ACCESORIOS">Accesorios</option>
+                                <option value="CHAQUETAS">Chaquetas</option>
+
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-uppercase">Precio (COP)</label>
+                            <input type="number" class="form-control rounded-0" id="admin-precio"
+                                placeholder="Ej: 45000" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-uppercase">Imagen de la Prenda</label>
+                            <input type="file" class="form-control rounded-0" id="admin-imagen" accept="image/*"
+                                required>
+                        </div>
+                        <button type="submit" class="btn btn-dark w-100 rounded-0 text-uppercase fw-semibold py-2">
+                            Guardar en Inventario
+                        </button>
+                    </form>
+                </div>
+            </div>
+
+            <div class="col-12 col-md-8">
+                <div class="bg-white p-4 border shadow-sm">
+                    <h3 class="fs-5 fw-bold mb-3 text-uppercase text-secondary">Inventario Actual de Prendas</h3>
+                    <hr>
+                    <div class="table-responsive">
+                        <table class="table align-middle border table-hover">
+                            <thead class="table-light text-uppercase small">
+                                <tr>
+                                    <th>Foto</th>
+                                    <th>Prenda</th>
+                                    <th>Categoría</th>
+                                    <th>Precio</th>
+                                    <th class="text-end">Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tabla-inventario"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+
+    <!-- ══════════════════════════════════════════
+         MODAL EDITAR PRODUCTO (existente)
+    ══════════════════════════════════════════ -->
+    <div class="modal fade" id="modalEditarProducto" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-0">
+                <div class="modal-header bg-dark text-white py-3">
+                    <h5 class="modal-title text-uppercase fw-bold fs-6">Editar Datos de la Prenda</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form id="form-editar-producto" enctype="multipart/form-data">
+                        <input type="hidden" id="edit-id">
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-uppercase">Nombre de la Prenda</label>
+                            <input type="text" class="form-control rounded-0" id="edit-nombre" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-uppercase">Categoría</label>
+                            <select class="form-select rounded-0" id="edit-categoria" required>
+                                <option value="" disabled selected>Selecciona una categoría...</option>
+                                <option value="BLUSAS">Blusas</option>
+                                <option value="CAMISAS">Camisas</option>
+                                <option value="TOPS">Tops</option>
+                                <option value="PANTALONES">Pantalones</option>
+                                <option value="VESTIDOS">Vestidos</option>
+                                <option value="CONJUNTOS">Conjuntos</option>
+                                <option value="ACCESORIOS">Accesorios</option>
+                                <option value="CHAQUETAS">Chaquetas</option>
+                                <option value="ZAPATOS">Zapatos</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-uppercase">Precio (COP)</label>
+                            <input type="number" class="form-control rounded-0" id="edit-precio" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-uppercase">Cambiar Imagen (Opcional)</label>
+                            <input type="file" class="form-control rounded-0" id="edit-imagen" accept="image/*">
+                            <div class="form-text text-muted small mt-1">Si no subes un archivo, se mantendrá la foto
+                                actual.</div>
+                        </div>
+                        <button type="submit" class="btn btn-success w-100 rounded-0 text-uppercase fw-semibold py-2">
+                            Actualizar Prenda
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <!-- ══════════════════════════════════════════
+         MODAL PERFIL DEL ADMINISTRADOR  ✅ NUEVO
+    ══════════════════════════════════════════ -->
+    <div class="modal fade" id="modalPerfilAdmin" tabindex="-1" data-bs-backdrop="static" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-0">
+
+                <div class="modal-header bg-dark text-white py-3">
+                    <h5 class="modal-title text-uppercase fw-bold fs-6">👤 Mi Perfil de Administrador</h5>
+                    <button type="button" class="btn-close btn-c<selectlose-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body p-4">
+
+                    <!-- Vista previa de foto + indicador de carga -->
+                    <div class="text-center mb-4">
+                        <div id="avatar-preview-wrap-modal" class="d-inline-block position-relative">
+                            <div class="avatar-placeholder-sm" id="perfil-avatar-modal-placeholder">👤</div>
+                            <img id="avatar-preview-modal" src="" alt="Foto de perfil" class="d-none"
+                                style="width:80px;height:80px;object-fit:cover;border-radius:50%;border:2px solid #dee2e6;">
+                        </div>
+                        <p class="text-muted small mt-2 mb-0">Foto de perfil actual</p>
+                    </div>
+
+                    <!-- Alerta de feedback -->
+                    <div id="alerta-perfil" class="alert d-none mb-3 rounded-0 small py-2"></div>
+
+                    <form id="form-perfil-admin" enctype="multipart/form-data">
+
+                        <!-- Nombre -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-uppercase">Nombre completo</label>
+                            <input type="text" class="form-control rounded-0" id="perfil-nombre"
+                                placeholder="Ej: Laura Martínez" required>
+                        </div>
+
+                        <!-- Correo -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-uppercase">Correo electrónico</label>
+                            <input type="email" class="form-control rounded-0" id="perfil-correo"
+                                placeholder="admin@zama.com" required>
+                        </div>
+
+                        <!-- Teléfono -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-uppercase">Teléfono</label>
+                            <input type="tel" class="form-control rounded-0" id="perfil-telefono"
+                                placeholder="Ej: 300 123 4567">
+                        </div>
+
+                        <!-- Dirección -->
+                        <div class="mb-3">
+                            <label class="form-label small fw-bold text-uppercase">Dirección</label>
+                            <input type="text" class="form-control rounded-0" id="perfil-direccion"
+                                placeholder="Ej: Calle 80 #12-34, Bogotá">
+                        </div>
+
+                        <!-- Foto -->
+                        <div class="mb-4">
+                            <label class="form-label small fw-bold text-uppercase">Cambiar Foto de Perfil</label>
+                            <input type="file" class="form-control rounded-0" id="perfil-foto" accept="image/*">
+                            <div class="form-text small text-muted mt-1">
+                                Formatos: JPG, PNG, WEBP · Máximo recomendado: 2 MB
+                            </div>
+                        </div>
+
+                        <button type="submit" id="btn-guardar-perfil"
+                            class="btn btn-dark w-100 rounded-0 text-uppercase fw-semibold py-2">
+                            Guardar Cambios
+                        </button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // ==========================================
+        // 🔒 SEGURIDAD: CONTROL DE ACCESO INMEDIATO
+        // ==========================================
+        const datosUsuario = localStorage.getItem('usuarioLogueado');
+        if (!datosUsuario) {
+            alert('Acceso denegado. Por favor inicia sesión.');
+            window.location.href = 'ingreso.html';
+        } else {
+            const usuario = JSON.parse(datosUsuario);
+            if (usuario.rol !== 'administrador') {
+                alert('No tienes permisos de administrador para ver esta pantalla.');
+                window.location.href = 'tienda.html';
+            }
+        }
+
+        function cerrarSesionAdmin() {
+            localStorage.removeItem('usuarioLogueado');
+            window.location.href = 'ingreso.html';
+        }
+
+        // ELEMENTOS DOM
+        const tablaInventario = document.getElementById('tabla-inventario');
+        const tablaPedidosAdmin = document.getElementById('tabla-pedidos-admin');
+        const formNuevo = document.getElementById('form-nuevo-producto');
+        const formEditar = document.getElementById('form-editar-producto');
+        const modalEditar = new bootstrap.Modal(document.getElementById('modalEditarProducto'));
+        const modalPerfil = new bootstrap.Modal(document.getElementById('modalPerfilAdmin'));
+
+
+        // ==========================================
+        // 👤 MOTOR 0: PERFIL DEL ADMINISTRADOR ✅ NUEVO
+        // ==========================================
+
+        /**
+         * Obtiene el ID del admin logueado desde el localStorage.
+         */
+        function getAdminId() {
+            const datos = localStorage.getItem('usuarioLogueado');
+            if (!datos) return null;
+            return JSON.parse(datos).id || null;
+        }
+
+        /**
+         * Actualiza la tarjeta de resumen rápido en la parte superior
+         * con los datos que vienen del servidor.
+         */
+        function actualizarTarjetaPerfilNav(perfil) {
+            document.getElementById('perfil-nombre-nav').textContent = perfil.nombre || '—';
+            document.getElementById('perfil-correo-nav').textContent = perfil.correo || perfil.email || '—';
+
+            const avatarNav = document.getElementById('perfil-avatar-nav');
+            if (perfil.foto) {
+                const fotoUrl = perfil.foto.startsWith('http')
+                    ? perfil.foto
+                    : `http://localhost:3000/${perfil.foto}`;
+                avatarNav.outerHTML = `<img src="${fotoUrl}" id="perfil-avatar-nav"
+                    style="width:90px;height:90px;object-fit:cover;border-radius:50%;border:3px solid #212529;"
+                    alt="Foto admin">`;
+            }
+        }
+
+        /**
+         * Carga el perfil del admin desde el servidor y rellena
+         * la tarjeta superior + los campos del modal.
+         */
+        async function cargarPerfilAdmin() {
+            const adminId = getAdminId();
+            if (!adminId) return;
+
+            try {
+                const res = await fetch(`http://localhost:3000/api/usuarios/${adminId}`);
+                if (!res.ok) throw new Error('No se pudo obtener el perfil');
+
+                const perfil = await res.json();
+
+                // ── Rellena tarjeta superior ──
+                // El servidor devuelve 'email', lo mapeamos a 'correo' para la tarjeta
+                perfil.correo = perfil.email || perfil.correo || '';
+                actualizarTarjetaPerfilNav(perfil);
+
+                // ── Rellena campos del modal ──
+                document.getElementById('perfil-nombre').value = perfil.nombre || '';
+                document.getElementById('perfil-correo').value = perfil.email || perfil.correo || '';
+                document.getElementById('perfil-telefono').value = perfil.telefono || '';
+                document.getElementById('perfil-direccion').value = perfil.direccion || '';
+
+                // ── Preview de la foto actual ──
+                const placeholder = document.getElementById('perfil-avatar-modal-placeholder');
+                const imgPreview = document.getElementById('avatar-preview-modal');
+
+                const fotoUrl = perfil.foto
+                    ? (perfil.foto.startsWith('http') ? perfil.foto : `http://localhost:3000/${perfil.foto}`)
+                    : null;
+
+                if (fotoUrl) {
+                    imgPreview.src = fotoUrl;
+                    imgPreview.classList.remove('d-none');
+                    placeholder && placeholder.classList.add('d-none');
+                } else {
+                    imgPreview.classList.add('d-none');
+                    placeholder && placeholder.classList.remove('d-none');
+                }
+
+            } catch (err) {
+                console.error('Error cargando perfil admin:', err);
+            }
+        }
+
+        /**
+         * Abre el modal de perfil y carga los datos frescos del servidor.
+         */
+        function abrirModalPerfil() {
+            // Limpia la alerta y el input de foto antes de abrir
+            const alerta = document.getElementById('alerta-perfil');
+            alerta.className = 'alert d-none mb-3 rounded-0 small py-2';
+            alerta.textContent = '';
+            document.getElementById('perfil-foto').value = '';
+
+            cargarPerfilAdmin();     // Trae datos frescos del servidor
+            modalPerfil.show();
+        }
+
+        /**
+         * Muestra una vista previa local de la imagen antes de subir.
+         */
+        document.getElementById('perfil-foto').addEventListener('change', function () {
+            const archivo = this.files[0];
+            if (!archivo) return;
+
+            const reader = new FileReader();
+            reader.onload = function (e) {
+                const imgPreview = document.getElementById('avatar-preview-modal');
+                const placeholder = document.getElementById('perfil-avatar-modal-placeholder');
+
+                imgPreview.src = e.target.result;
+                imgPreview.classList.remove('d-none');
+                placeholder && placeholder.classList.add('d-none');
+            };
+            reader.readAsDataURL(archivo);
+        });
+
+        /**
+         * Envía los datos del formulario al servidor (PUT multipart/form-data).
+         */
+        document.getElementById('form-perfil-admin').addEventListener('submit', async function (e) {
+            e.preventDefault();
+
+            const adminId = getAdminId();
+            if (!adminId) return;
+
+            const btnGuardar = document.getElementById('btn-guardar-perfil');
+            const alerta = document.getElementById('alerta-perfil');
+
+            // Estado de carga
+            btnGuardar.disabled = true;
+            btnGuardar.textContent = 'Guardando...';
+
+            const formData = new FormData();
+            formData.append('nombre', document.getElementById('perfil-nombre').value.trim());
+            formData.append('email', document.getElementById('perfil-correo').value.trim());
+            formData.append('telefono', document.getElementById('perfil-telefono').value.trim());
+            formData.append('direccion', document.getElementById('perfil-direccion').value.trim());
+
+            const archivoFoto = document.getElementById('perfil-foto').files[0];
+            if (archivoFoto) {
+                formData.append('foto', archivoFoto);
+            }
+
+            try {
+                const res = await fetch(`http://localhost:3000/api/usuarios/${adminId}`, {
+                    method: 'PUT',
+                    body: formData
+                });
+
+                if (res.ok) {
+                    const perfilActualizado = await res.json();
+
+                    // Normalizar: el server devuelve 'email', mapeamos a 'correo' para la tarjeta
+                    perfilActualizado.correo = perfilActualizado.email || perfilActualizado.correo || '';
+                    // Añadir URL base a la foto si viene solo el nombre del archivo
+                    if (perfilActualizado.foto && !perfilActualizado.foto.startsWith('http')) {
+                        perfilActualizado.foto = `http://localhost:3000/${perfilActualizado.foto}`;
+                    }
+
+                    // Actualiza el nombre en el localStorage
+                    const datosLocales = JSON.parse(localStorage.getItem('usuarioLogueado'));
+                    datosLocales.nombre = perfilActualizado.nombre || datosLocales.nombre;
+                    localStorage.setItem('usuarioLogueado', JSON.stringify(datosLocales));
+
+                    // Refresca la tarjeta superior
+                    actualizarTarjetaPerfilNav(perfilActualizado);
+
+                    alerta.className = 'alert alert-success mb-3 rounded-0 small py-2';
+                    alerta.textContent = '✅ Perfil actualizado correctamente.';
+                    alerta.classList.remove('d-none');
+
+                } else {
+                    const errorData = await res.json().catch(() => ({}));
+                    alerta.className = 'alert alert-danger mb-3 rounded-0 small py-2';
+                    alerta.textContent = `❌ Error: ${errorData.mensaje || 'No se pudo actualizar el perfil.'}`;
+                    alerta.classList.remove('d-none');
+                }
+
+            } catch (err) {
+                console.error('Error actualizando perfil:', err);
+                alerta.className = 'alert alert-danger mb-3 rounded-0 small py-2';
+                alerta.textContent = '❌ No se pudo conectar con el servidor.';
+                alerta.classList.remove('d-none');
+
+            } finally {
+                btnGuardar.disabled = false;
+                btnGuardar.textContent = 'Guardar Cambios';
+            }
+        });
+
+
+        // ==========================================
+        // 📦 MOTOR 1: CONTROL DE PEDIDOS
+        // ==========================================
+        async function cargarPedidosAdmin() {
+            try {
+                const res = await fetch('http://localhost:3000/api/pedidos');
+                if (!res.ok) throw new Error("Error en la petición");
+                const pedidos = await res.json();
+
+                tablaPedidosAdmin.innerHTML = '';
+                if (pedidos.length === 0) {
+                    tablaPedidosAdmin.innerHTML = `<tr><td colspan="6" class="text-center text-muted">No se registran órdenes en la tienda actualmente.</td></tr>`;
+                    return;
+                }
+
+                pedidos.forEach(ped => {
+                    let claseEstado = 'bg-warning text-dark';
+                    if (ped.estado === 'En camino') claseEstado = 'bg-info text-white';
+                    if (ped.estado === 'Entregado') claseEstado = 'bg-success text-white';
+
+                    tablaPedidosAdmin.innerHTML += `
+                        <tr>
+                            <td class="fw-bold">#ZM-${ped.id}</td>
+                            <td class="small text-muted">User ID: ${ped.usuario_id}</td>
+                            <td class="small">
+                                📞 ${ped.telefono_contacto || 'N/A'}<br>
+                                📍 <span class="text-secondary">${ped.direccion_envio || 'N/A'}</span>
+                            </td>
+                            <td class="fw-bold">$${parseFloat(ped.total).toLocaleString('es-CO')}</td>
+                            <td><span class="badge ${claseEstado} text-uppercase">${ped.estado}</span></td>
+                            <td class="text-end">
+                                <select onchange="cambiarEstadoPedido(${ped.id}, this.value)"
+                                        class="form-select form-select-sm rounded-0 d-inline-block" style="width:140px;">
+                                    <option value="Pendiente" ${ped.estado === 'Pendiente' ? 'selected' : ''}>🟡 Pendiente</option>
+                                    <option value="En camino" ${ped.estado === 'En camino' ? 'selected' : ''}>🔵 En camino</option>
+                                    <option value="Entregado" ${ped.estado === 'Entregado' ? 'selected' : ''}>🟢 Entregado</option>
+                                </select>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error("Error cargando pedidos:", err);
+                tablaPedidosAdmin.innerHTML = `<tr><td colspan="6" class="text-center text-danger small">No se pudo conectar con el endpoint de pedidos globales.</td></tr>`;
+            }
+        }
+
+        async function cambiarEstadoPedido(pedidoId, nuevoEstado) {
+            try {
+                const res = await fetch(`http://localhost:3000/api/pedidos/${pedidoId}/estado`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ estado: nuevoEstado })
+                });
+                if (res.ok) {
+                    alert(`¡Pedido #ZM-${pedidoId} actualizado a "${nuevoEstado}" con éxito!`);
+                    cargarPedidosAdmin();
+                } else {
+                    alert('Error al intentar actualizar el estado de la orden.');
+                }
+            } catch (err) {
+                console.error("Error actualizando estado:", err);
+            }
+        }
+
+
+        // ==========================================
+        // 🏷️ MOTOR 2: GESTIÓN DE PRODUCTOS
+        // ==========================================
+        async function cargarInventario() {
+            try {
+                const res = await fetch('http://localhost:3000/api/productos');
+                const productos = await res.json();
+                tablaInventario.innerHTML = '';
+
+                productos.forEach(p => {
+                    // Escapar comillas simples en el nombre para evitar romper el onclick
+                    const nombreSeguro = (p.nombre || '').replace(/'/g, "\\'");
+                    const categoriaSegura = (p.categoria || '').replace(/'/g, "\\'");
+                    const urlImagen = p.imagen
+                        ? (p.imagen.startsWith('http') ? p.imagen : `http://localhost:3000/${p.imagen}`)
+                        : 'https://via.placeholder.com/45x55?text=Sin+foto';
+
+                    tablaInventario.innerHTML += `
+                        <tr>
+                            <td>
+                                <img src="${urlImagen}" style="width:45px;height:55px;object-fit:cover;border-radius:4px;">
+                            </td>
+                            <td class="fw-bold text-uppercase small">${p.nombre}</td>
+                            <td class="text-muted small">${p.categoria || 'SIN CATEGORÍA'}</td>
+                            <td>$${parseFloat(p.precio).toLocaleString('es-CO')}</td>
+                            <td class="text-end">
+                                <button onclick="abrirEditor(${p.id}, '${nombreSeguro}', '${categoriaSegura}', ${p.precio})"
+                                        class="btn btn-sm btn-outline-dark rounded-0 me-1">✏️ Editar</button>
+                                <button onclick="eliminarPrenda(${p.id})"
+                                        class="btn btn-sm btn-outline-danger rounded-0">❌ Agotado</button>
+                            </td>
+                        </tr>
+                    `;
+                });
+            } catch (err) {
+                console.error("Error cargando inventario:", err);
+            }
+        }
+
+        formNuevo.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData();
+            formData.append('nombre', document.getElementById('admin-nombre').value);
+            formData.append('categoria', document.getElementById('admin-categoria').value);
+            formData.append('precio', document.getElementById('admin-precio').value);
+            formData.append('imagen', document.getElementById('admin-imagen').files[0]);
+
+            try {
+                const res = await fetch('http://localhost:3000/api/productos', {
+                    method: 'POST',
+                    body: formData
+                });
+                if (res.ok) {
+                    alert('¡Prenda añadida al inventario con éxito!');
+                    formNuevo.reset();
+                    cargarInventario();
+                }
+            } catch (err) { console.error(err); }
+        });
+
+        function abrirEditor(id, nombre, categoria, precio) {
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-nombre').value = nombre;
+            document.getElementById('edit-categoria').value = categoria;
+            document.getElementById('edit-precio').value = precio;
+            document.getElementById('edit-imagen').value = '';
+            modalEditar.show();
+        }
+
+
+        formEditar.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('edit-id').value;
+            const formData = new FormData();
+            formData.append('nombre', document.getElementById('edit-nombre').value);
+            formData.append('categoria', document.getElementById('edit-categoria').value);
+            formData.append('precio', document.getElementById('edit-precio').value);
+
+            const inputImagen = document.getElementById('edit-imagen');
+            if (inputImagen.files.length > 0) formData.append('imagen', inputImagen.files[0]);
+
+            try {
+                const res = await fetch(`http://localhost:3000/api/productos/${id}`, { method: 'PUT', body: formData });
+                if (res.ok) {
+                    alert('¡Prenda actualizada correctamente!');
+                    modalEditar.hide();
+                    cargarInventario();
+                } else {
+                    alert('Error al actualizar la prenda.');
+                }
+            } catch (err) { console.error(err); }
+        });
+
+        async function eliminarPrenda(id) {
+            if (confirm('¿Seguro que deseas eliminar este producto porque está agotado?')) {
+                try {
+                    const res = await fetch(`http://localhost:3000/api/productos/${id}`, { method: 'DELETE' });
+                    if (res.ok) cargarInventario();
+                } catch (err) { console.error(err); }
+            }
+        }
+
+
+        // ── EJECUCIÓN INICIAL ──
+        cargarInventario();
+        cargarPedidosAdmin();
+        cargarPerfilAdmin();   // ✅ Carga el perfil al iniciar
+    </script>
+</body>
+
+</html>

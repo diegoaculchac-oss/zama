@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zama - Detalle del Producto</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-uppercase tracking-wider" href="tienda.html">Zama Shop</a>
+            <a href="tienda.html" class="btn btn-outline-light btn-sm rounded-0">Volver a la Tienda</a>
+        </div>
+    </nav>
+
+    <main class="container my-5">
+        <div class="row g-5 bg-white p-4 border shadow-sm m-0">
+
+            <div class="col-12 col-md-6 text-center">
+                <img id="detalle-imagen" src="" alt="Cargando..." class="img-fluid border"
+                    style="max-height: 550px; object-fit: cover; width: 100%;">
+            </div>
+
+            <div class="col-12 col-md-6 d-flex flex-column justify-content-center">
+                <span id="detalle-categoria"
+                    class="badge bg-secondary text-uppercase mb-2 align-self-start py-2 px-3 rounded-0 fs-7">Categoría</span>
+                <h1 id="detalle-nombre" class="fw-bold text-uppercase lh-sm mb-3">Nombre de la Prenda</h1>
+                <h2 id="detalle-precio" class="text-success fw-semibold mb-4">$0.00</h2>
+
+                <hr>
+                <h5 class="fw-bold text-uppercase text-secondary small">Descripción del producto</h5>
+                <p id="detalle-descripcion" class="text-muted fs-5">Esta prenda está confeccionada con los mejores
+                    materiales para brindarte comodidad y estilo único en cualquier ocasión.</p>
+                <hr class="mb-4">
+
+                <!-- ✅ id agregado para que el JS lo encuentre -->
+                <button id="btn-agregar-carrito" class="btn btn-dark w-100 rounded-0 text-uppercase fw-bold py-3 fs-5">
+                    🛍️ Añadir al Carrito
+                </button>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const parametrosURL = new URLSearchParams(window.location.search);
+            const idProducto = parametrosURL.get('id');
+
+            if (!idProducto) {
+                alert('No se especificó ninguna prenda.');
+                window.location.href = 'tienda.html';
+                return;
+            }
+
+            try {
+                const respuesta = await fetch(`http://localhost:3000/api/productos/${idProducto}`);
+
+                if (!respuesta.ok) throw new Error('Producto no encontrado');
+
+                const producto = await respuesta.json();
+
+                // Inyectar datos en el HTML
+                document.getElementById('detalle-imagen').src = producto.imagen;
+                document.getElementById('detalle-imagen').alt = producto.nombre;
+                document.getElementById('detalle-nombre').innerText = producto.nombre;
+                document.getElementById('detalle-categoria').innerText = producto.categoria || 'GENERAL';
+                document.getElementById('detalle-precio').innerText = `$${parseFloat(producto.precio).toLocaleString('es-CO')}`;
+
+                if (producto.descripcion) {
+                    document.getElementById('detalle-descripcion').innerText = producto.descripcion;
+                }
+
+                document.title = `Zama - ${producto.nombre}`;
+
+                // ✅ LÓGICA DEL BOTÓN AÑADIR AL CARRITO
+                document.getElementById('btn-agregar-carrito').addEventListener('click', () => {
+                    const carrito = JSON.parse(localStorage.getItem('carrito')) || [];
+
+                    const existente = carrito.find(item => item.nombre === producto.nombre);
+                    if (existente) {
+                        existente.cantidad = (existente.cantidad || 1) + 1;
+                    } else {
+                        carrito.push({
+                            nombre: producto.nombre,
+                            precio: parseFloat(producto.precio),
+                            imagen: producto.imagen,
+                            cantidad: 1
+                        });
+                    }
+
+                    localStorage.setItem('carrito', JSON.stringify(carrito));
+
+                    // Feedback visual
+                    const btn = document.getElementById('btn-agregar-carrito');
+                    btn.textContent = '✅ ¡Añadido al carrito!';
+                    btn.classList.replace('btn-dark', 'btn-success');
+                    setTimeout(() => {
+                        btn.innerHTML = '🛍️ Añadir al Carrito';
+                        btn.classList.replace('btn-success', 'btn-dark');
+                    }, 1800);
+                });
+
+            } catch (error) {
+                console.error('Error:', error);
+                alert('La prenda no existe en el inventario.');
+                window.location.href = 'tienda.html';
+            }
+        });
+    </script>
+</body>
+
+</html>

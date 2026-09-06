@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zama - Mi Carrito</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body class="bg-light">
+    <nav class="navbar navbar-expand-lg bg-white border-bottom py-3">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-uppercase tracking-wider m-0 fs-4" href="index.html"
+                style="font-family: sans-serif;">Zama</a>
+            <div class="ms-auto d-flex align-items-center gap-4">
+                <a class="nav-link fw-semibold text-uppercase small tracking-wider text-dark"
+                    href="tienda.html">Tienda</a>
+                <a class="nav-link fw-semibold text-uppercase small tracking-wider text-dark"
+                    href="index.html">Inicio</a>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container mt-5">
+        <h2 class="display-5 fw-light mb-4" style="font-family: sans-serif;">Mi Carrito de Compras</h2>
+
+        <div class="row g-4">
+            <div class="col-12 col-md-8">
+                <div id="lista-carrito" class="d-flex flex-column gap-3">
+                </div>
+            </div>
+
+            <div class="col-12 col-md-4">
+                <div class="bg-white p-4 border rounded-0 shadow-sm">
+                    <h3 class="fs-5 fw-semibold mb-3 text-uppercase">Resumen</h3>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center mb-3">
+                        <span class="fw-bold fs-5">Total:</span>
+                        <span id="total-precio" class="fw-bold fs-4 text-dark">$0</span>
+                    </div>
+                    <button id="btn-vaciar"
+                        class="btn btn-outline-danger w-100 rounded-0 mb-3 text-uppercase fw-semibold btn-sm">
+                        Vaciar Carrito
+                    </button>
+
+                    <button id="btn-proceder-pago" class="btn btn-dark w-100 rounded-0 text-uppercase fw-semibold py-2">
+                        Proceder al Pago
+                    </button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal fade" id="modalMetodoPago" data-bs-backdrop="static" tabindex="-1"
+        aria-labelledby="modalPagoLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content rounded-0">
+                <div class="modal-header bg-dark text-white">
+                    <h5 class="modal-title text-uppercase fw-bold fs-6" id="modalPagoLabel">Finalizar Pedido</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <p class="text-muted small text-uppercase fw-bold text-center mb-4">¿Cómo deseas gestionar tu orden?
+                    </p>
+
+                    <div class="border p-3 mb-3 hover-shadow" style="cursor: pointer;" id="opcion-whatsapp-directo">
+                        <h5 class="fw-bold text-success mb-1">💬 Hacer pedido por WhatsApp</h5>
+                        <p class="text-muted small m-0">Envía tu lista de prendas para coordinar el envío y pago en
+                            efectivo.</p>
+                    </div>
+
+                    <div class="border p-3" style="cursor: pointer;" id="opcion-nequi-mostrar">
+                        <h5 class="fw-bold text-dark mb-1" style="color: #1d1b38;">📱 Transferir por Nequi</h5>
+                        <p class="text-muted small m-0">Ver datos de la cuenta para transferir de inmediato y reportar
+                            el código.</p>
+                    </div>
+
+                    <div id="seccion-formulario-nequi" class="d-none mt-4 pt-3 border-top">
+                        <div class="text-center mb-3 bg-light p-2 border">
+                            <p class="mb-0 text-muted small text-uppercase fw-bold">Cuenta Nequi:</p>
+                            <h4 class="fw-bold text-dark m-0">321 440 3548</h4>
+                            <small class="text-muted">Titular: Tienda Zama</small>
+                        </div>
+
+                        <form id="form-nequi">
+                            <div class="mb-3">
+                                <label for="nequi-referencia" class="form-label small fw-bold text-uppercase">
+                                    Código de Referencia de la Transferencia
+                                </label>
+                                <input type="text" class="form-control rounded-0" id="nequi-referencia"
+                                    placeholder="Ej: 1763317" required>
+                            </div>
+                            <button type="submit" class="btn btn-dark w-100 rounded-0 text-uppercase fw-semibold"
+                                style="background-color: #ff007f; border: none;">
+                                Enviar reporte por WhatsApp
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/cart.js"></script>
+</body>
+
+</html>

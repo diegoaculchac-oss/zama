@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HaDeZ - Tienda</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        .btn-filtro {
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            letter-spacing: 1px;
+            opacity: 0;
+            animation: entrada-btn 0.4s ease forwards;
+        }
+
+        /* Ola de brillo al hacer hover */
+        .btn-filtro::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: rgba(255, 255, 255, 0.15);
+            transform: translateX(-100%);
+            transition: transform 0.3s ease;
+        }
+
+        .btn-filtro:hover::after {
+            transform: translateX(0);
+        }
+
+        /* Sube + sombra en hover */
+        .btn-filtro:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Baja al hacer clic */
+        .btn-filtro:active {
+            transform: translateY(1px);
+            box-shadow: none;
+        }
+
+        /* Pulso al quedar activo */
+        .btn-filtro.btn-dark {
+            animation: entrada-btn 0.4s ease forwards, pulso 0.35s ease;
+        }
+
+        @keyframes pulso {
+            0% {
+                transform: scale(1);
+            }
+
+            45% {
+                transform: scale(1.12);
+            }
+
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        /* Entrada escalonada al cargar */
+        @keyframes entrada-btn {
+            from {
+                opacity: 0;
+                transform: translateY(14px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn-filtro:nth-child(1) {
+            animation-delay: 0.05s;
+        }
+
+        .btn-filtro:nth-child(2) {
+            animation-delay: 0.10s;
+        }
+
+        .btn-filtro:nth-child(3) {
+            animation-delay: 0.15s;
+        }
+
+        .btn-filtro:nth-child(4) {
+            animation-delay: 0.20s;
+        }
+
+        .btn-filtro:nth-child(5) {
+            animation-delay: 0.25s;
+        }
+
+        .btn-filtro:nth-child(6) {
+            animation-delay: 0.30s;
+        }
+
+        .btn-filtro:nth-child(7) {
+            animation-delay: 0.35s;
+        }
+
+        .btn-filtro:nth-child(8) {
+            animation-delay: 0.40s;
+        }
+
+        .btn-filtro:nth-child(9) {
+            animation-delay: 0.45s;
+        }
+
+        .btn-filtro:nth-child(10) {
+            animation-delay: 0.50s;
+        }
+    </style>
+</head>
+
+<body>
+
+    <nav class="navbar navbar-expand-lg bg-dark navbar-dark border-bottom border-secondary py-3 fixed-top shadow">
+        <div class="container">
+            <a class="navbar-brand fw-bold text-uppercase tracking-wider m-0 fs-4 text-white" href="index.html"
+                style="font-family: sans-serif;">HaDeZ</a>
+
+            <div class="ms-auto d-flex align-items-center gap-4">
+                <a class="nav-link fw-semibold text-uppercase small tracking-wider text-light"
+                    href="index.html">Inicio</a>
+
+                <a href="carrito.html" class="text-white position-relative text-decoration-none fs-5"
+                    title="Carrito de compras">
+                    🛒
+                    <span id="contador-carrito"
+                        class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger small"
+                        style="font-size: 0.6rem;">0</span>
+                </a>
+
+                <div id="contenedor-usuario-nav" class="d-flex align-items-center">
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <main class="container pt-5 mt-5">
+        <h2 class="display-5 fw-light mb-4 text-dark" style="font-family: sans-serif;">Tienda</h2>
+
+        <div class="d-flex flex-wrap gap-2 mb-4">
+            <button class="btn btn-dark rounded-0 px-4 py-2 text-uppercase fw-semibold btn-sm btn-filtro"
+                data-categoria="todos">Todo</button>
+            <button class="btn btn-outline-dark rounded-0 px-4 py-2 text-uppercase fw-semibold btn-sm btn-filtro"
+                data-categoria="vestidos">Vestidos</button>
+            <button class="btn btn-outline-dark rounded-0 px-4 py-2 text-uppercase fw-semibold btn-sm btn-filtro"
+                data-categoria="blusas">Blusas</button>
+            <button class="btn btn-outline-dark rounded-0 px-4 py-2 text-uppercase fw-semibold btn-sm btn-filtro"
+                data-categoria="tops">Tops</button>
+            <button class="btn btn-outline-dark rounded-0 px-4 py-2 text-uppercase fw-semibold btn-sm btn-filtro"
+                data-categoria="pantalones">Pantalones</button>
+            <button class="btn btn-outline-dark rounded-0 px-4 py-2 text-uppercase fw-semibold btn-sm btn-filtro"
+                data-categoria="camisas">Camisas</button>
+            <button class="btn btn-outline-dark rounded-0 px-4 py-2 text-uppercase fw-semibold btn-sm btn-filtro"
+                data-categoria="conjuntos">Conjuntos</button>
+            <button class="btn btn-outline-dark rounded-0 px-4 py-2 text-uppercase fw-semibold btn-sm btn-filtro"
+                data-categoria="accesorios">Accesorios</button>
+            <button class="btn btn-outline-dark rounded-0 px-4 py-2 text-uppercase fw-semibold btn-sm btn-filtro"
+                data-categoria="chaquetas">Chaquetas</button>
+            <button class="btn btn-outline-dark rounded-0 px-4 py-2 text-uppercase fw-semibold btn-sm btn-filtro"
+                data-categoria="busos">Busos</button>
+
+        </div>
+
+        <p class="text-muted small mb-4" id="contador-productos-texto">Cargando productos...</p>
+
+        <div class="row g-4" id="contenedor-productos">
+        </div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.7/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script type="module" src="js/tienda.js"></script>
+
+    <script src="js/auth.js"></script>
+</body>
+
+</html>
